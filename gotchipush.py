@@ -27,10 +27,11 @@ from scapy.all import rdpcap, EAPOL
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configuration
-HANDSHAKE_DIR = "/root/handshakes"  # Path to the handshake files
-API_URL = "https://wpa-sec.stanev.org"  # WPA-SEC API base URL
 API_KEY = "YOUR-KEY"  # <-- Set your API key here as per README instructions
-UPLOADED_LOG = "/root/uploaded_handshakes.json"  # File to track uploaded handshakes
+
+HANDSHAKE_DIR = "/home/pi/handshakes"  # Path to the handshake files
+API_URL = "https://wpa-sec.stanev.org"  # WPA-SEC API base URL
+UPLOADED_LOG = "/home/pi/uploaded_handshakes.json"  # File to track uploaded handshakes
 
 
 def ensure_trailing_slash(url):
@@ -117,11 +118,14 @@ def main():
     parser.add_argument("-d", "--dry-run", action="store_true", help="Simulate the upload without sending files")
     parser.add_argument("-v", "--validate-upload", action="store_true", help="Validate handshakes and upload status")
     parser.add_argument("-f", "--force", action="store_true", help="Force upload even if already uploaded")
-
+    parser.add_argument("-k", "--key", type=str, help="Add your API key via the command line")
     args = parser.parse_args()
 
-    if not API_KEY:
-        logging.error("API key is not set. Please configure the script with your API key.")
+
+    api_key = args.key if args.key else API_KEY
+
+    if not api_key or api_key == "YOUR-KEY":
+        logging.error("API key is not set. Provide it via --key or set it in the script.")
         return
 
     if not os.path.exists(HANDSHAKE_DIR):
@@ -150,7 +154,7 @@ def main():
             logging.warning("Invalid handshake file (skipped): %s", handshake)
             continue
 
-        if upload_to_wpasec(handshake, api_url, API_KEY, args.dry_run):
+        if upload_to_wpasec(handshake, api_url, api_key, args.dry_run):
             uploaded_files.add(file_hash)
 
     save_uploaded_files(UPLOADED_LOG, uploaded_files)
