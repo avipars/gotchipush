@@ -27,10 +27,10 @@ from scapy.all import rdpcap, EAPOL
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configuration
-HANDSHAKE_DIR = "/root/handshakes"  # Path to the handshake files
+HANDSHAKE_DIR = "/home/pi/handshakes"  # Path to the handshake files
 API_URL = "https://wpa-sec.stanev.org"  # WPA-SEC API base URL
 API_KEY = "YOUR-KEY"  # <-- Set your API key here as per README instructions
-UPLOADED_LOG = "/root/uploaded_handshakes.json"  # File to track uploaded handshakes
+UPLOADED_LOG = "/home/pi/uploaded_handshakes.json"  # File to track uploaded handshakes
 
 
 def ensure_trailing_slash(url):
