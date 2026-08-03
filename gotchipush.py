@@ -21,7 +21,6 @@ import argparse
 import requests
 import json
 import hashlib
-from scapy.all import rdpcap, EAPOL
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -46,6 +45,7 @@ def calculate_file_hash(file_path):
 
 
 def is_valid_handshake(file_path):
+    from scapy.all import rdpcap, EAPOL
     if os.path.getsize(file_path) == 0:
         logging.warning("File is empty: %s", file_path)
         return False
